@@ -4,11 +4,85 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
     <title>Calculator Demo</title>
   </head>
-  <body></body>
+  <body>
+    <div class="frame">
+      <div class="calculator-output">
+        <div class="previous-operation"></div>
+        <div class="current-operation"></div>
+      </div>
+      <button class="two-span">AC</button>
+      <button><i class="material-icons">backspace</i></button>
+      <button>/</button>
+      <button>7</button>
+      <button>8</button>
+      <button>9</button>
+      <button>x</button>
+      <button>4</button>
+      <button>5</button>
+      <button>6</button>
+      <button>-</button>
+      <button>1</button>
+      <button>2</button>
+      <button>3</button>
+      <button>+</button>
+      <button>.</button>
+      <button>0</button>
+
+      <button class="two-span">=</button>
+    </div>
+  </body>
 </html>
 
-<style></style>
+<style>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    font-weight: normal;
+  }
+
+  body {
+    padding: 0%;
+    margin: 0;
+    background: linear-gradient(to right, #00aaff, #00ff6c);
+  }
+
+  /*
+  Selects Calculator Frame
+  */
+  .frame {
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    min-height: 100vh;
+    grid-template-columns: repeat(4, 100px);
+    grid-template-rows: minmax(120px, auto) repeat(5, 100px);
+  }
+
+  /*
+  Selects buttons in the calculator frame
+  */
+  .frame > button {
+    cursor: pointer;
+    font-size: 2rem;
+    border: 1px solid white;
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.75);
+  }
+
+  /*
+  Selects button being hovered over
+  */
+  .frame > button:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+</style>
 
 <script defer></script>
