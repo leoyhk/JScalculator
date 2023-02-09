@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <title>Calculator Demo</title>
+  </head>
+  <body>
+    <div class="frame">
+      <div class="calculator-body">
+        <div class="calculator-output">
+          <div class="previous-operation" id="previous-operation"></div>
+          <div class="current-operation" id="current-operation"></div>
+        </div>
+        <button class="two-span">AC</button>
+        <button>%</button>
+        <button>÷</button>
+        <button>7</button>
+        <button>8</button>
+        <button>9</button>
+        <button>×</button>
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button>-</button>
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>+</button>
+        <button>.</button>
+        <button>0</button>
+        <button><i class="material-icons">backspace</i></button>
+        <button>=</button>
+      </div>
+    </div>
+  </body>
+</html>
+
+<style>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    font-weight: normal;
+  }
+
+  body {
+    padding: 0%;
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    text-align: center;
+  }
+
+  /*
+  Selects Calculator Frame
+  */
+  .calculator-body {
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    min-height: 100vh;
+    grid-template-columns: repeat(4, 100px);
+    grid-template-rows: minmax(120px, auto) repeat(5, 100px);
+  }
+
+  /*
+  Selects buttons in the calculator frame
+  */
+  .calculator-body > button {
+    cursor: pointer;
+    font-size: 2rem;
+    border: 1px solid white;
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.75);
+  }
+
+  /*
+  Selects button being hovered over
+  */
+  .calculator-body > button:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+
+  /* Button with two spans */
+  .two-span {
+    grid-column: span 2;
+  }
+
+  /* Output */
+  .calculator-output {
+    background-color: rgba(0, 0, 0, 0.75);
+    display: flex;
+    grid-column: 1/-1;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    font-size: 4rem;
+    color: white;
+    border-radius: 25px;
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+</style>
+
+<script defer>
+  var isDecimalAllowed = true;
+  const operant = "+×-÷";
+  $("button").click(function () {
+    var _textLength = $("#current-operation").text().length;
+    // console.log($(this).text());
+    switch ($(this).text()) {
+      default:
+        var lastDigit = $("#current-operation")
+          .text()
+          .charAt($("#current-operation").text().length - 1);
+        if (
+          operant.includes(
+            $("#current-operation")
+              .text()
+              .charAt($("#current-operation").text().length - 2)
+          ) &&
+          lastDigit == "-" &&
+          $(this).text() == "-"
+        ) {
+        } else if (
+          operant.includes(lastDigit) &&
+          operant.includes($(this).text()) &&
+          $(this).text() != "-"
+        ) {
+          $("#current-operation").text(function (_, text) {
+            return text.slice(0, -1);
+          });
+          $("#current-operation").append($(this).text());
+        } else {
+          $("#current-operation").append($(this).text());
+        }
+
+        break;
+      //   case "0":
+      //     if (!$("#current-operation").text() == "") {
+      //       $("#current-operation").append($(this).text());
+      //     }
+      //     break;
+      case "AC":
+        $("#previous-operation").text("");
+        $("#current-operation").text("");
+        isDecimalAllowed = true;
+        break;
+      case "backspace":
+        if (
+          $("#current-operation")
+            .text()
+            .charAt(_textLength - 1) == "."
+        ) {
+          isDecimalAllowed = true;
+        }
+        $("#current-operation").text(function (_, text) {
+          return text.slice(0, -1);
+        });
+        break;
+      case ".":
+        if (isDecimalAllowed) {
+          $("#current-operation").append(".");
+          isDecimalAllowed = !isDecimalAllowed;
+        }
+        break;
+      case "%":
+        if ($("#previous-operation").text() != "") {
+          var _pending = parseFloat($("#previous-operation").text());
+          _pending /= 100.0;
+          $("#previous-operation").text(_pending.toString());
+        }
+        break;
+      case "=":
+        if ($("#current-operation").text() != "") {
+          var _result = handleCalculation($("#current-operation").text());
+          $("#previous-operation").text(_result.toString());
+          $("#current-operation").text("");
+          isDecimalAllowed = true;
+        }
+        break;
+    }
+  });
+  function handleCalculation(formula) {
+    var isUndefined = false;
+    var result = 0;
+    var _operation = "+";
+    console.log(formula);
+    var isFirstDigit = true;
+    while (formula && !isUndefined) {
+      if (typeof formula.charAt(0) == "string" && !isFirstDigit) {
+        _operation = formula.charAt(0);
+
+        formula = formula.slice(1, formula.length);
+      }
+      var _number = parseFloat(formula);
+      var _numOfDigits = _number.toString().length;
+
+      formula = formula.slice(_numOfDigits, formula.length);
+
+      switch (_operation) {
+        default:
+          result += _number;
+          break;
+        case "-":
+          result -= _number;
+          break;
+        case "×":
+          result *= _number;
+          break;
+        case "÷":
+          if (_number == 0.0) {
+            isUndefined = true;
+            result = "UNDEFINED!";
+          } else {
+            result /= _number;
+          }
+          break;
+      }
+      isFirstDigit = false;
+    }
+
+    return result;
+  }
+</script>
